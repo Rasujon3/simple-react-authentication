@@ -2,6 +2,7 @@ import "./App.css";
 import app from "./firebase.init";
 import {
   getAuth,
+  GithubAuthProvider,
   GoogleAuthProvider,
   signInWithPopup,
   signOut,
@@ -12,9 +13,11 @@ const auth = getAuth(app);
 
 function App() {
   const [user, setUser] = useState({});
-  const provider = new GoogleAuthProvider();
+  const googleProvider = new GoogleAuthProvider();
+  const githubProvider = new GithubAuthProvider();
+
   const handleGoogleSignIn = () => {
-    signInWithPopup(auth, provider)
+    signInWithPopup(auth, googleProvider)
       .then((result) => {
         // This gives you a Google Access Token. You can use it to access the Google API.
         const credential = GoogleAuthProvider.credentialFromResult(result);
@@ -37,6 +40,18 @@ function App() {
       });
   };
 
+  const handleGithubSignIn = () => {
+    signInWithPopup(auth, githubProvider)
+      .then((result) => {
+        // The signed-in user info.
+        const user = result.user;
+        console.log(user);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   const handleGoogleSignOut = () => {
     const auth = getAuth();
     signOut(auth)
@@ -56,7 +71,10 @@ function App() {
       {user.email ? (
         <button onClick={() => handleGoogleSignOut()}>Google Sign out</button>
       ) : (
-        <button onClick={() => handleGoogleSignIn()}>Google Sign In</button>
+        <>
+          <button onClick={() => handleGoogleSignIn()}>Google Sign In</button>
+          <button onClick={() => handleGithubSignIn()}>Github Sign In</button>
+        </>
       )}
       <h2>Name: {user.displayName}</h2>
       <p>Email: {user.email}</p>
