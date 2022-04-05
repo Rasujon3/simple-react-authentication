@@ -45,6 +45,7 @@ function App() {
       .then((result) => {
         // The signed-in user info.
         const user = result.user;
+        setUser(user);
         console.log(user);
       })
       .catch((error) => {
@@ -68,7 +69,7 @@ function App() {
   return (
     <div className="App">
       <h1>Milestone-10-React-Authentication</h1>
-      {user.email ? (
+      {user.uid ? (
         <button onClick={() => handleGoogleSignOut()}>Google Sign out</button>
       ) : (
         <>
