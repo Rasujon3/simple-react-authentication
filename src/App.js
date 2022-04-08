@@ -7,6 +7,7 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
   signOut,
+  TwitterAuthProvider,
 } from "firebase/auth";
 import { useState } from "react";
 
@@ -17,6 +18,7 @@ function App() {
   const googleProvider = new GoogleAuthProvider();
   const githubProvider = new GithubAuthProvider();
   const facebookProvider = new FacebookAuthProvider();
+  const twitterProvider = new TwitterAuthProvider();
 
   const handleGoogleSignIn = () => {
     signInWithPopup(auth, googleProvider)
@@ -67,6 +69,21 @@ function App() {
       });
   };
 
+  // bearer token: AAAAAAAAAAAAAAAAAAAAAI0KbQEAAAAAFXJT5pFCmX3BbVAZaJGHNhlq8Xw%3DjS9AYgOgOSfk47b7IFJDzn9AY33toNV3iS8UyA49BYphXb2VAm
+  // twitter callback: https://simple-firebase-authenti-ec368.firebaseapp.com/__/auth/handler
+
+  const handleTwitterSignIn = () => {
+    signInWithPopup(auth, twitterProvider)
+      .then((result) => {
+        const user = result.user;
+        setUser(user);
+        console.log(user);
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
+  };
+
   const handleGoogleSignOut = () => {
     const auth = getAuth();
     signOut(auth)
@@ -84,7 +101,7 @@ function App() {
     <div className="App">
       <h1>Milestone-10-React-Authentication</h1>
       {user.uid ? (
-        <button onClick={() => handleGoogleSignOut()}>Google Sign out</button>
+        <button onClick={() => handleGoogleSignOut()}>Sign out</button>
       ) : (
         <>
           <button onClick={() => handleGoogleSignIn()}>Google Sign In</button>
@@ -92,10 +109,11 @@ function App() {
             Facebook Sign In
           </button>
           <button onClick={() => handleGithubSignIn()}>Github Sign In</button>
+          <button onClick={() => handleTwitterSignIn()}>Twitter Sign In</button>
         </>
       )}
       <h2>Name: {user.displayName}</h2>
-      <p>Email: {user.email}</p>
+      <p>Email: {user.email ? user.email : "Not found"}</p>
       <img src={user.photoURL} alt="" />
     </div>
   );
